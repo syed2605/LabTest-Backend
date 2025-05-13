@@ -1,4 +1,4 @@
-
+import mongoose, { Schema } from 'mongoose';
 import { IDepartment } from '../interfaces/model.interfaces';
 
 const DepartmentSchema = new Schema<IDepartment>({

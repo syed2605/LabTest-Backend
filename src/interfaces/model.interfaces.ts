@@ -36,7 +36,7 @@ export enum SampleStatus {
   APPROVED = 'approved',
 }
 
-export interface ISample extends Document, ITimeStamps, ICreatedUpdatedBy
+export interface ISample extends Document, ITimeStamps, ICreatedUpdatedBy {
   patientId: mongoose.Types.ObjectId;
   departmentId: mongoose.Types.ObjectId;
   collectionDate: Date;
@@ -48,12 +48,12 @@ export interface ISample extends Document, ITimeStamps, ICreatedUpdatedBy
 }
 
 
-export interface IDepartment extends Document, ITimeStamps, ICreatedUpdatedBy
+export interface IDepartment extends Document, ITimeStamps, ICreatedUpdatedBy {
   title: string;
   description: string;
 }
 
-export interface IProcess extends Document, ITimeStamps, ICreatedUpdatedBy
+export interface IProcess extends Document, ITimeStamps, ICreatedUpdatedBy {
   title: string;
   description: string;
   departmentId: mongoose.Types.ObjectId;
@@ -61,18 +61,18 @@ export interface IProcess extends Document, ITimeStamps, ICreatedUpdatedBy
   validRange: string;
 }
 
-export interface IResult extends Document, ITimeStamps, ICreatedUpdatedBy
+export interface IResult extends Document, ITimeStamps, ICreatedUpdatedBy {
   sampleId: mongoose.Types.ObjectId;
   departmentId: mongoose.Types.ObjectId;
   processId: mongoose.Types.ObjectId;
   resultSummary: string;
 }
 
-export interface IInstrument extends Document, ITimeStamps, ICreatedUpdatedBy
+export interface IInstrument extends Document, ITimeStamps, ICreatedUpdatedBy {
   name: string;
 }
 
-export interface IInstrumentResult extends Document, ITimeStamps, ICreatedUpdatedBy
+export interface IInstrumentResult extends Document, ITimeStamps, ICreatedUpdatedBy {
   sampleId: mongoose.Types.ObjectId;
   departmentId: mongoose.Types.ObjectId;
   processId: mongoose.Types.ObjectId;

@@ -9,10 +9,10 @@ const UserSchema = new Schema<IUser>({
   age: { type: Number, required: true },
   gender: { type: String, required: true },
   phoneNumber: { type: Number, required: true },
-  departmentId: { type: mongoose.Types.ObjectId, required: false },
-  processId: { type: mongoose.Types.ObjectId, required: false },
-  createdBy: { type: mongoose.Types.ObjectId, required: false, ref: 'User' },
-  updatedBy: { type: mongoose.Types.ObjectId, required: false, ref: 'User' },
+  departmentId: { type: mongoose.Schema.Types.ObjectId, required: false },
+  processId: { type: mongoose.Schema.Types.ObjectId, required: false },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'User' },
+  updatedBy: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'User' },
 }, { timestamps: true });
 
 export default mongoose.model<IUser>('User', UserSchema);

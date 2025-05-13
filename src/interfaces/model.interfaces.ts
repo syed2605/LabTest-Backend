@@ -37,13 +37,13 @@ export enum SampleStatus {
 }
 
 export interface ISample extends Document, ITimeStamps, ICreatedUpdatedBy {
-  patientId: mongoose.Types.ObjectId;
-  departmentId: mongoose.Types.ObjectId;
+  patientId: mongoose.Schema.Types.ObjectId;
+  departmentId: mongoose.Schema.Types.ObjectId;
   collectionDate: Date;
   physicianName: string;
   tissueType: string;
-  processIds: mongoose.Types.ObjectId[];
-  currentProcessId: mongoose.Types.ObjectId;
+  processIds: mongoose.Schema.Types.ObjectId[];
+  currentProcessId: mongoose.Schema.Types.ObjectId;
   status: SampleStatus;
 }
 
@@ -56,15 +56,15 @@ export interface IDepartment extends Document, ITimeStamps, ICreatedUpdatedBy {
 export interface IProcess extends Document, ITimeStamps, ICreatedUpdatedBy {
   title: string;
   description: string;
-  departmentId: mongoose.Types.ObjectId;
+  departmentId: mongoose.Schema.Types.ObjectId;
   sequence: number;
   validRange: string;
 }
 
 export interface IResult extends Document, ITimeStamps, ICreatedUpdatedBy {
-  sampleId: mongoose.Types.ObjectId;
-  departmentId: mongoose.Types.ObjectId;
-  processId: mongoose.Types.ObjectId;
+  sampleId: mongoose.Schema.Types.ObjectId;
+  departmentId: mongoose.Schema.Types.ObjectId;
+  processId: mongoose.Schema.Types.ObjectId;
   resultSummary: string;
 }
 
@@ -73,9 +73,9 @@ export interface IInstrument extends Document, ITimeStamps, ICreatedUpdatedBy {
 }
 
 export interface IInstrumentResult extends Document, ITimeStamps, ICreatedUpdatedBy {
-  sampleId: mongoose.Types.ObjectId;
-  departmentId: mongoose.Types.ObjectId;
-  processId: mongoose.Types.ObjectId;
+  sampleId: mongoose.Schema.Types.ObjectId;
+  departmentId: mongoose.Schema.Types.ObjectId;
+  processId: mongoose.Schema.Types.ObjectId;
   resultSummary: string;
   inValidRange: boolean;
 }

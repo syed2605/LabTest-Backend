@@ -28,3 +28,44 @@ export interface IToken extends Document, ITimeStamps, ICreatedUpdatedBy {
   accessTokenExpiry: Date;
   refreshTokenExpiry: Date;
 }
+
+
+export enum SampleStatus {
+  IN_PROGRESS = 'Inprogress',
+  COMPLETED = 'completed',
+  APPROVED = 'approved',
+}
+
+export interface ISample extends Document {
+  patientId: mongoose.Types.ObjectId;
+  departmentId: mongoose.Types.ObjectId;
+  collectionDate: Date;
+  physicianName: string;
+  tissueType: string;
+  processIds: mongoose.Types.ObjectId[];
+  currentProcessId: mongoose.Types.ObjectId;
+  status: SampleStatus;
+}
+
+
+export interface IDepartment extends Document {
+  title: string;
+  description: string;
+}
+
+export interface IProcess extends Document {
+  title: string;
+  description: string;
+  departmentId: mongoose.Types.ObjectId;
+  sequence: number;
+  validRange: string;
+}
+
+export interface IResult extends Document {
+  sampleId: mongoose.Types.ObjectId;
+  departmentId: mongoose.Types.ObjectId;
+  processId: mongoose.Types.ObjectId;
+  resultSummary: string;
+}
+
+

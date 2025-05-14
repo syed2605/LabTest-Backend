@@ -36,6 +36,11 @@ export enum SampleStatus {
   APPROVED = 'approved',
 }
 
+export enum Status {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+}
+
 export interface ISample extends Document, ITimeStamps, ICreatedUpdatedBy {
   patientId: mongoose.Schema.Types.ObjectId;
   departmentId: mongoose.Schema.Types.ObjectId;
@@ -53,6 +58,7 @@ export interface ISample extends Document, ITimeStamps, ICreatedUpdatedBy {
 export interface IDepartment extends Document, ITimeStamps, ICreatedUpdatedBy {
   title: string;
   description: string;
+  status: Status;
 }
 
 export interface IProcess extends Document, ITimeStamps, ICreatedUpdatedBy {
@@ -61,6 +67,7 @@ export interface IProcess extends Document, ITimeStamps, ICreatedUpdatedBy {
   departmentId: mongoose.Schema.Types.ObjectId;
   sequence: number;
   validRange: string;
+  status: Status;
 }
 
 export interface IResult extends Document, ITimeStamps, ICreatedUpdatedBy {
@@ -72,6 +79,7 @@ export interface IResult extends Document, ITimeStamps, ICreatedUpdatedBy {
 
 export interface IInstrument extends Document, ITimeStamps, ICreatedUpdatedBy {
   name: string;
+  status: Status;
 }
 
 export interface IInstrumentResult extends Document, ITimeStamps, ICreatedUpdatedBy {

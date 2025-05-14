@@ -10,15 +10,10 @@ export interface ICreatedUpdatedBy {
   updatedBy?: mongoose.Schema.Types.ObjectId;
 }
 export interface EmailOptions { 
-
   to: string | string[]; 
-
   subject: string; 
-
   html?: string; 
-
   text?: string; 
-
 } 
 
 export interface INotifi{

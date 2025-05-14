@@ -1,5 +1,5 @@
 const express = require("express");
-import { refreshToken, validateUser , createUserController, getUserById, deleteTokenController} from "../controller/user.controller";
+import { refreshToken, validateUser , createUserController, getUserById, deleteTokenController, getUserByRole} from "../controller/user.controller";
 import authenticateToken from "../middleware/authMiddleware";
 import validateRefreshToken from "../middleware/refreshTokenMiddleware";
 
@@ -10,5 +10,6 @@ router.post('/logout/:id', deleteTokenController)
 router.post('/refresh',validateRefreshToken, refreshToken)
 router.post('/createUser', createUserController)
 router.get('/getUserById/:id',authenticateToken, getUserById )
+router.get('/getUserByRole',authenticateToken, getUserByRole )
 
 export default router;

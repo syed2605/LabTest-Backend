@@ -8,7 +8,7 @@ const SampleSchema = new Schema<ISample>({
   physicianName: { type: String, required: true },
   tissueType: { type: String, required: true },
   processIds: { type: [mongoose.Schema.Types.ObjectId], required: true, ref: 'Process' },
-  currentProcessId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Process' },
+  currentProcessId: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Process' },
   status: { type: String, required: true, enum: Object.values(SampleStatus) },
 }, { timestamps: true });
 

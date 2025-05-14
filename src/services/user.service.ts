@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import UserModel from "../models/user.model";
 import mongoose from "mongoose";
 import { IUser } from "../interfaces/model.interfaces";
+import { PaginationOptions } from "../interfaces/common.interfaces";
 
 // Inject your services (using a DI container or manual instantiation)
 export const userService: UserService = {
@@ -55,6 +56,37 @@ export const userService: UserService = {
             return user;
         } catch (error: any) {
             console.error('Error getting enroll in service:', error);
+            if (error.status) {
+                throw error;
+            }
+            throw { status: 500, message: 'Error getting enroll' };
+        }
+       },
+       getUserByRole: async (pageOptions: PaginationOptions,role : string) :  Promise<{
+         user: IUser[];
+         totalCount: number;
+         totalPages: number;
+         currentPage: number;
+       }> => {
+         const { page = 1, limit = 10 } = pageOptions;
+          const skip = (page - 1) * limit;
+          try {
+            const users = UserModel.find({role}).select("-password").skip(skip).limit(limit).exec();
+            const countPromise = UserModel.countDocuments().exec();
+        
+            const [user, totalCount] = await Promise.all([users, countPromise]);
+        
+            const totalPages = Math.ceil(totalCount / limit);
+            const currentPage = page;
+        
+            return {
+              user,
+              totalCount,
+              totalPages,
+              currentPage,
+            };
+        } catch (error: any) {
+            console.error('Error getting users for this role in service:', error);
             if (error.status) {
                 throw error;
             }

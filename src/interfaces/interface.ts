@@ -1,6 +1,6 @@
 import mongoose, { Document } from "mongoose";
 import { IResult, IUser } from "./model.interfaces";
-
+import { PaginationOptions } from "./common.interfaces";
 export interface IToken extends Document {
     _id: mongoose.Schema.Types.ObjectId;
      userId: string;
@@ -51,6 +51,12 @@ export interface IToken extends Document {
         getUserById(userId: mongoose.Schema.Types.ObjectId): Promise<IUser | null>; // Added getUserById
         createUser(user: IUser): Promise<IUser | null>; // Added getUserById
         getUserByID(uid: mongoose.Schema.Types.ObjectId): Promise<IUser[] | null>; // Added getUserById
+        getUserByRole(pageOptions: PaginationOptions,role:string): Promise<{
+          user: IUser[];
+          totalCount: number;
+          totalPages: number;
+          currentPage: number;
+        }>;
       }
       export interface ProgressService {
         addProgress(progress: IResult): Promise<IResult | null>; 

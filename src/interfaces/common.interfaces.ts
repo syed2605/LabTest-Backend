@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { SampleStatus } from './model.interfaces';
 
 export interface ITimeStamps {
   createdAt?: Date;
@@ -22,3 +23,19 @@ export interface INotifi{
   message: string;
   isRead: boolean;
 }
+
+export interface AllSampleDataInterface {
+  patientName?: string;
+    departmentName?: string;
+    collectionDate?: Date;
+    physicianName?: string;
+    tissueType?: string;
+    processIds?: mongoose.Schema.Types.ObjectId[];
+    currentProcessId?: string;
+    status?: SampleStatus;
+}
+
+export interface PaginationOptions {
+    page?: number;
+    limit?: number;
+  }

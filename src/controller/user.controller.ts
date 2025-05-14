@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import TokenModel from "../models/token";
 import { AuthenticatedRequest } from "../middleware/authMiddleware";
 import { IUser } from "../interfaces/model.interfaces";
+import { PaginationOptions } from "../interfaces/common.interfaces";
 
 export const validateUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -102,6 +103,21 @@ export const createUserController = async (req: Request, res : Response) : Promi
 export const getUserById = async (req: Request, res : Response) : Promise<void> => {
     try{
             const user : IUser[] | null = await userService.getUserByID(req.params.id as unknown as mongoose.Schema.Types.ObjectId);
+            
+            res.status(201).json(successResponse(user, "User fetched successfully"));
+        }
+        catch (error) {
+                res.status(500).json(errorResponse('Failed to fetch User', error));
+            }
+}
+
+export const getUserByRole = async (req: Request, res : Response) : Promise<void> => {
+    try{
+      const pageOptions: PaginationOptions = {
+              page: parseInt(req.query.page as string),
+              limit: parseInt(req.query.limit as string),
+            };
+            const user= await userService.getUserByRole(pageOptions,req?.query?.role as string);
             
             res.status(201).json(successResponse(user, "User fetched successfully"));
         }

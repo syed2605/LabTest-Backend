@@ -39,12 +39,14 @@ export enum SampleStatus {
 export interface ISample extends Document, ITimeStamps, ICreatedUpdatedBy {
   patientId: mongoose.Schema.Types.ObjectId;
   departmentId: mongoose.Schema.Types.ObjectId;
-  collectionDate: Date;
+  collectionDate?: Date;
   physicianName: string;
   tissueType: string;
   processIds: mongoose.Schema.Types.ObjectId[];
   currentProcessId: mongoose.Schema.Types.ObjectId;
   status: SampleStatus;
+  isRejected:Boolean;
+  rejectedProcessIds: mongoose.Schema.Types.ObjectId[];
 }
 
 

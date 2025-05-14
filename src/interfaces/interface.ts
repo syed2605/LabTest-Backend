@@ -1,5 +1,5 @@
 import mongoose, { Document } from "mongoose";
-import { IUser } from "./model.interfaces";
+import { IResult, IUser } from "./model.interfaces";
 
 export interface IToken extends Document {
     _id: mongoose.Schema.Types.ObjectId;
@@ -51,6 +51,9 @@ export interface IToken extends Document {
         getUserById(userId: mongoose.Schema.Types.ObjectId): Promise<IUser | null>; // Added getUserById
         createUser(user: IUser): Promise<IUser | null>; // Added getUserById
         getUserByID(uid: mongoose.Schema.Types.ObjectId): Promise<IUser[] | null>; // Added getUserById
+      }
+      export interface ProgressService {
+        addProgress(progress: IResult): Promise<IResult | null>; 
       }
       export interface TokenDocument {
         _id: mongoose.Schema.Types.ObjectId;

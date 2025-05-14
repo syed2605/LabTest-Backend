@@ -1,4 +1,5 @@
 
+import mongoose, { Schema } from 'mongoose';
 import { IProcess } from '../interfaces/model.interfaces';
 
 const ProcessSchema = new Schema<IProcess>({

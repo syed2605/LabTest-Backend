@@ -13,22 +13,3 @@ connectDB().then(() => {
   });
 });
 
-// setTimeout(() => {
-//   sendEmail({ 
-
-//     to: "sampleemail@gmail.com", 
-
-//     subject: "Your login credentials", 
-
-//     text: "", 
-
-//     html: `<div> 
-
-//            <p>User name: sample</p> 
-
-//            <p>Password: sample Password</p> 
-
-//            <div>` 
-
-//     });
-// },3000)

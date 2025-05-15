@@ -1,15 +1,27 @@
 import mongoose from "mongoose";
-import { Request, Response } from 'express';
-import {  addNewSample, convertSampleData, getAllSampleData, getSampleById, updateSampleCurrentProcess } from './../services/sample.service';
+import { Request, Response } from "express";
+import {
+  addNewSample,
+  convertSampleData,
+  getAllSampleData,
+  getSampleById,
+  updateSampleCurrentProcess,
+} from "./../services/sample.service";
 import { SampleService } from "../services/sample.service";
 import { errorResponse, successResponse } from "../utils/user.utils";
-import { ISample } from '../interfaces/model.interfaces';
-import { AllSampleDataInterface, PaginationOptions } from '../interfaces/common.interfaces';
+import { ISample } from "../interfaces/model.interfaces";
+import {
+  AllSampleDataInterface,
+  PaginationOptions,
+} from "../interfaces/common.interfaces";
 
 export const getSamplebyCurrentId = async (req: Request, res: Response) => {
   try {
     const id = req?.params?.id;
-    const data = await SampleService.getSamplebyProcessId(id);
+    const page = Number(req?.query?.page);
+    const limit = Number(req?.query?.limit);
+    console.log(limit, page, "check ll");
+    const data = await SampleService.getSamplebyProcessId(id, page, limit);
     res.status(200).json(successResponse(data, "Progress Added successfully"));
   } catch (error) {
     res.status(500).json(errorResponse("Progress currentid error", error));
@@ -21,7 +33,9 @@ export const getSamplebyStatus = async (req: Request, res: Response) => {
     const id = req.query.status as string;
     console.log("status check", id);
     const data = await SampleService.getSamplebyStatus(id);
-    res.status(200).json(successResponse(data, "Progress Added successfully"));
+    res
+      .status(200)
+      .json(successResponse(data, "Progress Fetched successfully"));
   } catch (error) {
     res.status(500).json(errorResponse("Progress error", error));
   }
@@ -67,25 +81,33 @@ export const getAllSample = async (
   res: Response
 ): Promise<void> => {
   try {
-
     const pageOptions: PaginationOptions = {
-        page: parseInt(req.query.page as string),
-        limit: parseInt(req.query.limit as string),
-      };
+      page: parseInt(req.query.page as string),
+      limit: parseInt(req.query.limit as string),
+    };
     const savedSample = await getAllSampleData(pageOptions);
-    console.log("Saved samples",savedSample)
-    const finalSampleData : AllSampleDataInterface[] | null = await convertSampleData(savedSample?.sample)
+    console.log("Saved samples", savedSample);
+    const finalSampleData: AllSampleDataInterface[] | null =
+      await convertSampleData(savedSample?.sample);
     const data = {
-      data : finalSampleData,
-      totalCount : savedSample?.totalCount,
-      totalPages : savedSample?.totalPages,
-      currentPage : savedSample?.currentPage,
-    }
-      res
-      .status(200)
-      .json(successResponse(data, "Sample Fetched successfully"));
+      data: finalSampleData,
+      totalCount: savedSample?.totalCount,
+      totalPages: savedSample?.totalPages,
+      currentPage: savedSample?.currentPage,
+    };
+    res.status(200).json(successResponse(data, "Sample Fetched successfully"));
   } catch (error: any) {
     console.error("Error creating sample in controller:", error);
     res.status(500).json(errorResponse("Error creating sample ", error));
   }
-}
+};
+
+export const getSamplebyId = async (req: Request, res: Response) => {
+  try {
+    const id = req?.params?.id;
+    const data = await SampleService.getSamplebyId(id);
+    res.status(200).json(successResponse(data, "Progress Added successfully"));
+  } catch (error) {
+    res.status(500).json(errorResponse("Progress currentid error", error));
+  }
+};

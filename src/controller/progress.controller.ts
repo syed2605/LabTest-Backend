@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Response, Request } from "express";
 import { IResult, ISample, SampleStatus } from "../interfaces/model.interfaces";
 import { progressService } from "../services/progress.service";
 import { errorResponse, successResponse } from "../utils/user.utils";
@@ -29,7 +29,7 @@ export const addProgress = async (req: any, res: Response): Promise<void> => {
   );
 
   const isLastProcess = currentIndex === SampleDetails.processIds.length - 1;
-
+  console.log("check id,", SampleDetails.processIds.length - 1, currentIndex);
   if (isLastProcess) {
     SampleDetails.status = SampleStatus.COMPLETED;
   } else {
@@ -41,22 +41,32 @@ export const addProgress = async (req: any, res: Response): Promise<void> => {
 
 export const signOffSample = async (req: any, res: any) => {
   //-> get sample details based on sampleid
-    const SampleDetails = (await Sample.findById(req.body.sampleId)) as ISample;
+  const SampleDetails = (await Sample.findById(req.body.sampleId)) as ISample;
   const isApproved = req.params.status === "approved";
   console.log(req.params);
-    if (isApproved) {
-      SampleDetails.status = SampleStatus.APPROVED;
-    } else {
-      //signoffrejected
-      // 1. Updated isRejected: true
-      SampleDetails.isRejected = true;
-      // 2. updated rejected_process_id
-      SampleDetails.rejectedProcessIds = req.body.rejectedProcessId;
-      //3. update currentProcessIds 
-      SampleDetails.currentProcessId= req.body.rejectedProcessId[0];
-      // 3. update status to in-progress
-      SampleDetails.status = SampleStatus.IN_PROGRESS;
-    }
+  if (isApproved) {
+    SampleDetails.status = SampleStatus.APPROVED;
+  } else {
+    //signoffrejected
+    // 1. Updated isRejected: true
+    SampleDetails.isRejected = true;
+    // 2. updated rejected_process_id
+    SampleDetails.rejectedProcessIds = req.body.rejectedProcessId;
+    //3. update currentProcessIds
+    SampleDetails.currentProcessId = req.body.rejectedProcessId[0];
+    // 3. update status to in-progress
+    SampleDetails.status = SampleStatus.IN_PROGRESS;
+  }
 
-    await SampleDetails.save();
+  await SampleDetails.save();
+};
+
+export const getProgressByID = async (req: Request, res: Response) => {
+  // const id  = req.params.id;
+  try {
+    const newProgress = await progressService.getProgressById(req.params.id);
+    res
+      .status(200)
+      .json(successResponse(newProgress, "Progress Added successfully"));
+  } catch (error) {}
 };

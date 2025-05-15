@@ -1,4 +1,7 @@
-import { AllSampleDataInterface, PaginationOptions } from "../interfaces/common.interfaces";
+import {
+  AllSampleDataInterface,
+  PaginationOptions,
+} from "../interfaces/common.interfaces";
 import { IDepartment, ISample, IUser } from "../interfaces/model.interfaces";
 import { Sample } from "./../models/sample.model";
 import mongoose from "mongoose";
@@ -6,16 +9,25 @@ import { userService } from "./user.service";
 import { getDepartmentById } from "./department.service";
 
 export const SampleService = {
-  getSamplebyProcessId: async (id: string) => {
+  getSamplebyProcessId: async (id: string, page: number, limit: number) => {
+    limit = limit > 10 ? 10 : limit;
+    const skip = (page - 1) * limit;
+
     const sample = await Sample.find({
       currentProcessId: id,
-      // status: { $nin: ["completed", "approved"] },
-    });
+      status: { $nin: ["completed", "approved"] },
+    })
+      .skip(skip)
+      .limit(limit);
     return sample;
   },
   getSamplebyStatus: async (status: string) => {
     console.log("status", status);
     const sample = await Sample.find({ status: status });
+    return sample;
+  },
+  getSamplebyId: async (id: string) => {
+    const sample = await Sample.findById(id);
     return sample;
   },
 };

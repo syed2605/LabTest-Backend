@@ -1,15 +1,34 @@
-import mongoose, { Schema } from 'mongoose';
-import { ISample, SampleStatus } from '../interfaces/model.interfaces';
+import mongoose, { Schema } from "mongoose";
+import { ISample, SampleStatus } from "../interfaces/model.interfaces";
 
-const SampleSchema = new Schema<ISample>({
-  patientId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Patient' },
-  departmentId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Department' },
-  collectionDate: { type: Date, required: true },
-  physicianName: { type: String, required: true },
-  tissueType: { type: String, required: true },
-  processIds: { type: [mongoose.Schema.Types.ObjectId], required: true, ref: 'Process' },
-  currentProcessId: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Process' },
-  status: { type: String, required: true, enum: Object.values(SampleStatus) },
-}, { timestamps: true });
+const SampleSchema = new Schema<ISample>(
+  {
+    patientId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Patient",
+    },
+    departmentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Department",
+    },
+    collectionDate: { type: Date, required: false },
+    physicianName: { type: String, required: true },
+    tissueType: { type: String, required: true },
+    processIds: {
+      type: [mongoose.Schema.Types.ObjectId],
+      required: true,
+      ref: "Process",
+    },
+    currentProcessId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: false,
+      ref: "Process",
+    },
+    status: { type: String, required: true, enum: Object.values(SampleStatus) },
+  },
+  { timestamps: true }
+);
 
-export const Sample = mongoose.model<ISample>('Sample', SampleSchema);
+export const Sample = mongoose.model<ISample>("Sample", SampleSchema);

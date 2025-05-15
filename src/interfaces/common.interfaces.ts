@@ -26,12 +26,15 @@ export interface INotifi{
 
 export interface AllSampleDataInterface {
   patientName?: string;
+  patientId?: string;
     departmentName?: string;
+    departmentId?: string;
     collectionDate?: Date;
     physicianName?: string;
     tissueType?: string;
     processIds?: mongoose.Schema.Types.ObjectId[];
     currentProcessId?: string;
+    currentProcessName?: string;
     status?: SampleStatus;
 }
 

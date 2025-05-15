@@ -35,6 +35,20 @@ export const getProcessById = async (req: Request, res: Response) => {
     }
 };
 
+export const getProcessByDepId = async (req: Request, res: Response) => {
+    try {
+        const process = await processService.getProcessByDepId(req.params.id);
+        res.status(200).json({ success: true, message: 'Process fetched successfully', data: process });
+    } catch (error: any) {
+        if (error.message === 'Process not found') {
+            res.status(404).json({ success: false, message: 'Process not found', error: error.message });
+        } else {
+            console.error('Error fetching process:', error);
+            res.status(500).json({ success: false, message: 'Failed to fetch process', error: error.message });
+        }
+    }
+};
+
 export const updateProcess = async (req: Request, res: Response) => {
     try {
         const process = await processService.updateProcess(req.params.id, req.body);

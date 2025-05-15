@@ -1,17 +1,19 @@
-import { Router } from 'express';
+const express = require("express");
 import {
     getAllProcesses,
     createProcess,
     getProcessById,
-    updateProcess
+    updateProcess,
+    getProcessByDepId
 } from '../controller/process.controller';
-
-const router = Router();
+import authenticateToken from '../middleware/authMiddleware';
+const router = express.Router();
 
 // Process routes
-router.get('/', getAllProcesses);
-router.post('/', createProcess);
-router.get('/:id', getProcessById);
-router.patch('/:id', updateProcess);
+router.get('/', authenticateToken,getAllProcesses);
+router.post('/',authenticateToken, createProcess);
+router.get('/:id',authenticateToken, getProcessById);
+router.patch('/:id',authenticateToken, updateProcess);
+router.get('/getProcessByDepId/:id', authenticateToken,getProcessByDepId);
 
 export default router;

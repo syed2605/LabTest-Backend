@@ -2,11 +2,17 @@ import {
   AllSampleDataInterface,
   PaginationOptions,
 } from "../interfaces/common.interfaces";
-import { IDepartment, ISample, IUser } from "../interfaces/model.interfaces";
+import {
+  IDepartment,
+  IProcess,
+  ISample,
+  IUser,
+} from "../interfaces/model.interfaces";
 import { Sample } from "./../models/sample.model";
 import mongoose from "mongoose";
 import { userService } from "./user.service";
 import { getDepartmentById } from "./department.service";
+import { getProcessById } from "./process.service";
 
 export const SampleService = {
   getSamplebyProcessId: async (id: string, page: number, limit: number) => {
@@ -53,7 +59,8 @@ export const updateSampleCurrentProcess = async (
 };
 
 export const getAllSampleData = async (
-  paginationOptions: PaginationOptions
+  paginationOptions: PaginationOptions,
+  searchQuery?: string
 ): Promise<{
   sample: ISample[];
   totalCount: number;
@@ -62,11 +69,60 @@ export const getAllSampleData = async (
 }> => {
   const { page = 1, limit = 10 } = paginationOptions;
   const skip = (page - 1) * limit;
-  try {
-    const samples = Sample.find().skip(skip).limit(limit).exec();
-    const countPromise = Sample.countDocuments().exec();
+  const query: any = {}; // Initialize an empty query object
 
-    const [sample, totalCount] = await Promise.all([samples, countPromise]);
+  if (searchQuery) {
+    // Define the fields you want to search across
+    const searchFields = ['physicianName', 'status', 'tissueType']; // Add more fields as needed
+    const orConditions = searchFields.map((field) => ({
+      [field]: { $regex: new RegExp(searchQuery, 'i') }, // 'i' for case-insensitive search
+    }));
+    query.$or = orConditions;
+  }
+
+  try {
+    const samplesPromise = Sample.find(query).skip(skip).limit(limit).exec();
+    const countPromise = Sample.countDocuments(query).exec();
+
+    const [sample, totalCount] = await Promise.all([samplesPromise, countPromise]);
+
+    const totalPages = Math.ceil(totalCount / limit);
+    const currentPage = page;
+
+    return {
+      sample,
+      totalCount,
+      totalPages,
+      currentPage,
+    };
+  } catch (error: any) {
+    console.error("Error fetching trials with pagination in service:", error);
+    if (error.status) {
+      throw error;
+    }
+    throw { status: 500, message: "Error fetching Trials with pagination" };
+  }
+};
+
+export const getAllSampleDataByPatient = async (
+  paginationOptions: PaginationOptions,
+  patientId?: string
+): Promise<{
+  sample: ISample[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+}> => {
+  const { page = 1, limit = 10 } = paginationOptions;
+  const skip = (page - 1) * limit;
+  const query: any = {}; // Initialize an empty query object
+
+
+  try {
+    const samplesPromise = Sample.find({patientId}).skip(skip).limit(limit).exec();
+    const countPromise = Sample.countDocuments(query).exec();
+
+    const [sample, totalCount] = await Promise.all([samplesPromise, countPromise]);
 
     const totalPages = Math.ceil(totalCount / limit);
     const currentPage = page;
@@ -96,14 +152,15 @@ export const convertSampleData = async (
   const promises: Promise<AllSampleDataInterface>[] = savedSample.map(
     async (sample: ISample) => {
       let newData: AllSampleDataInterface = {};
-
+      // Add User Name
       const user: IUser | null = await userService.getUserById(
         sample?.patientId
       );
       if (user) {
         newData.patientName = user.name;
       }
-      console.log(user, newData);
+      newData.patientId = sample?.patientId.toString();
+      // Add Department Name
 
       const department: IDepartment | null = await getDepartmentById(
         (sample?.departmentId).toString()
@@ -111,13 +168,22 @@ export const convertSampleData = async (
       if (department) {
         newData.departmentName = department.title;
       }
-      console.log(department, newData);
+      newData.departmentId = sample?.departmentId.toString();
+      // Add Current Process Name
+
+      const process: IProcess = await getProcessById(
+        (sample?.currentProcessId).toString()
+      );
+      if (process) {
+        newData.currentProcessName = process.title;
+      }
 
       newData.collectionDate = sample.collectionDate;
       newData.physicianName = sample.physicianName;
       newData.tissueType = sample.tissueType;
-      // newData.processIds = sample.processIds
-      newData.currentProcessId = sample.currentProcessId.toString();
+      newData.currentProcessId = sample?.currentProcessId
+        ? sample?.currentProcessId.toString()
+        : "";
       newData.status = sample.status;
       console.log(newData);
       return newData;

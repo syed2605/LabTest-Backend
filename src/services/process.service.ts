@@ -17,6 +17,15 @@ export const getProcessById = async (id: string) => {
     return process;
 };
 
+export const getProcessByDepId = async (departmentId: string) => {
+    const process = await Process.find({departmentId});
+    if (!process) {
+        throw new Error('Process not found');
+    }
+    return process;
+};
+
+
 export const updateProcess = async (id: string, processData: any) => {
     const process = await Process.findByIdAndUpdate(id, processData, { new: true });
     if (!process) {
